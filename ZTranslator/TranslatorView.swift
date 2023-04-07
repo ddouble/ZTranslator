@@ -18,7 +18,7 @@ struct TranslatorView: View {
 //                .imageScale(.large)
 //                .foregroundColor(.accentColor)
             Text(text).font(
-                .system(size: 20, design: .monospaced)
+                .system(size: 36, design: .monospaced)
 //                    .custom("Verdana", size: 20)
             )
         }

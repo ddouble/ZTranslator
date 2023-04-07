@@ -198,7 +198,8 @@ class ZTranslatorApp: App {
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
-            var text = AXUIElement.focusedElement?.selectedText ?? ""
+            var text = getSelectedText() ?? ""
+//            var text = AXUIElement.focusedElement?.selectedText ?? ""
             if (text.isEmpty) {
                 text = "can't get the text"
             }
