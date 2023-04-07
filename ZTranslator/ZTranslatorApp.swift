@@ -76,6 +76,16 @@ func sendTextToClipboard() {
 }
 
 /**
+ Bring a window to front by its title
+ */
+func bringWindowToFront(windowTitle: String) {
+    let windows = NSApplication.shared.windows
+    if let windowToBringToFront = windows.first(where: { $0.title == windowTitle }) {
+        windowToBringToFront.orderFrontRegardless()
+    }
+}
+
+/**
  Get tranlsation result from chatgpt
  - Parameters:
    - text:
@@ -164,9 +174,13 @@ class ZTranslatorApp: App {
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
-            let text = getSelectedText()
+            var text = getSelectedText() ?? ""
+            if (text.isEmpty) {
+                text = "can't get the text"
+            }
+            bringWindowToFront(windowTitle: "ZTranslator")
 
-            getOpenAIResponse(text: text ?? "") { (response, error) in
+            getOpenAIResponse(text: text) { (response, error) in
                 if let error = error {
                     print("Error: \(error)")
                     NotificationCenter.default.post(name: .selectedTextChanged, object: error)

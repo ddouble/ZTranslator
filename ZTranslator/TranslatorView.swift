@@ -14,22 +14,22 @@ struct TranslatorView: View {
     @State var text: String
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                    .imageScale(.large)
-                    .foregroundColor(.accentColor)
+//            Image(systemName: "globe")
+//                .imageScale(.large)
+//                .foregroundColor(.accentColor)
             Text(text).font(
-                    .system(size: 20, design: .monospaced)
+                .system(size: 20, design: .monospaced)
 //                    .custom("Verdana", size: 20)
             )
         }
-                .padding()
-                .onAppear {
-                    NotificationCenter.default.addObserver(forName: .selectedTextChanged, object: nil, queue: .main) { notification in
-                        if let newText = notification.object as? String {
-                            self.text = newText
-                        }
+            .padding()
+            .onAppear {
+                NotificationCenter.default.addObserver(forName: .selectedTextChanged, object: nil, queue: .main) { notification in
+                    if let newText = notification.object as? String {
+                        self.text = newText
                     }
                 }
+            }
 
     }
 }
