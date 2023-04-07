@@ -16,6 +16,7 @@
 		5605C64229DD6B4800454941 /* ZTranslatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5605C64129DD6B4800454941 /* ZTranslatorUITestsLaunchTests.swift */; };
 		56F858AF29DEDBAF00AA46E3 /* MASShortcut in Frameworks */ = {isa = PBXBuildFile; productRef = 56F858AE29DEDBAF00AA46E3 /* MASShortcut */; };
 		5AE6A8DE9E1C7A0804FFF729 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5AE6ACEB7460F49F317FE7DA /* .gitignore */; };
+		5AE6A98DDD33605E6C081909 /* ZTranslatorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE6A7AF14BCAF2FE606B774 /* ZTranslatorSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		5605C63F29DD6B4800454941 /* ZTranslatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZTranslatorUITests.swift; sourceTree = "<group>"; };
 		5605C64129DD6B4800454941 /* ZTranslatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZTranslatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		5605C64E29DD849200454941 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5AE6A7AF14BCAF2FE606B774 /* ZTranslatorSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZTranslatorSettings.swift; sourceTree = "<group>"; };
 		5AE6ACEB7460F49F317FE7DA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +109,7 @@
 				5605C62729DD6B4700454941 /* Assets.xcassets */,
 				5605C62C29DD6B4700454941 /* ZTranslator.entitlements */,
 				5605C62929DD6B4700454941 /* Preview Content */,
+				5AE6A7AF14BCAF2FE606B774 /* ZTranslatorSettings.swift */,
 			);
 			path = ZTranslator;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			files = (
 				5605C62629DD6B4500454941 /* ContentView.swift in Sources */,
 				5605C62429DD6B4500454941 /* ZTranslatorApp.swift in Sources */,
+				5AE6A98DDD33605E6C081909 /* ZTranslatorSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

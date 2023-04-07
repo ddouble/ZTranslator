@@ -82,7 +82,9 @@ func sendTextToClipboard() {
    - completion:
  */
 func getOpenAIResponse(messages: [[String: Any]], completion: @escaping (String?, Error?) -> Void) {
-    let apiKey = "YOUR-OPENAI-API-KEY"
+    @AppStorage("ZTranslator.openai-api-key")
+    var apiKey: String = "YOUR-OPENAI-API-KEY"
+
     let urlString = "https://api.openai.com/v1/chat/completions"
     let url = URL(string: urlString)!
     var request = URLRequest(url: url)
@@ -132,6 +134,7 @@ extension Notification.Name {
     static let selectedTextChanged = Notification.Name("SelectedTextChanged")
 }
 
+
 @main
 class ZTranslatorApp: App {
 
@@ -139,6 +142,12 @@ class ZTranslatorApp: App {
         WindowGroup {
             ContentView(text: "Translation will be here")
         }
+
+        #if os(macOS)
+        Settings {
+            ZTranslatorSettings()
+        }
+        #endif
     }
 
 
