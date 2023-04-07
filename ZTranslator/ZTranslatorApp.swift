@@ -52,6 +52,24 @@ func getSelectedText2() -> String? {
     return String(selectedText[range])
 }
 
+/**
+ get clipboard text
+ - Returns:
+ */
+func getClipboardText() -> String? {
+    let pasteboard = NSPasteboard.general
+    let text = pasteboard.string(forType: .string)
+    return text
+}
+
+/**
+ Send text to clipboard
+ */
+func sendTextToClipboard() {
+    NSPasteboard.general.clearContents()
+    NSPasteboard.general.setString("Text to copy", forType: .string)
+}
+
 @main
 struct ZTranslatorApp: App {
     var body: some Scene {
@@ -66,16 +84,10 @@ struct ZTranslatorApp: App {
         MASShortcutMonitor.shared().register(shortcut) {
 //            print("CTRL+CMD+X pressed")
 
-            // Trigger the global copy command
-//            NSPasteboard.general.clearContents()
-//            NSPasteboard.general.setString("Text to copy", forType: .string)
 
-            // get clipboard text
-//            let pasteboard = NSPasteboard.general
-//            let selectedText = pasteboard.string(forType: .string)
 //            let selectedText = getSelectedText2()
             let selectedText = getSelectedText()
-//            print(selectedText ?? "")
+            print(selectedText ?? "")
 
         }
     }
