@@ -39,6 +39,29 @@ func getSelectedText() -> String? {
     return selectedTextValue as? String
 }
 
+extension AXUIElement {
+  static var focusedElement: AXUIElement? {
+    systemWide.element(for: kAXFocusedUIElementAttribute)
+  }
+  
+  var selectedText: String? {
+    rawValue(for: kAXSelectedTextAttribute) as? String
+  }
+  
+  private static var systemWide = AXUIElementCreateSystemWide()
+  
+  private func element(for attribute: String) -> AXUIElement? {
+    guard let rawValue = rawValue(for: attribute), CFGetTypeID(rawValue) == AXUIElementGetTypeID() else { return nil }
+    return (rawValue as! AXUIElement)
+  }
+  
+  private func rawValue(for attribute: String) -> AnyObject? {
+    var rawValue: AnyObject?
+    let error = AXUIElementCopyAttributeValue(self, attribute as CFString, &rawValue)
+    return error == .success ? rawValue : nil
+  }
+}
+
 
 /**
  this function DOESN'T WORK
@@ -175,7 +198,7 @@ class ZTranslatorApp: App {
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
-            var text = getSelectedText() ?? ""
+            var text = AXUIElement.focusedElement?.selectedText ?? ""
             if (text.isEmpty) {
                 text = "can't get the text"
             }
