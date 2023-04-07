@@ -78,12 +78,15 @@ func sendTextToClipboard() {
 /**
  Get tranlsation result from chatgpt
  - Parameters:
-   - messages:
+   - text:
    - completion:
  */
-func getOpenAIResponse(messages: [[String: Any]], completion: @escaping (String?, Error?) -> Void) {
+func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> Void) {
     @AppStorage("ZTranslator.openai-api-key")
     var apiKey: String = "YOUR-OPENAI-API-KEY"
+
+    @AppStorage("ZTranslator.to-lang")
+    var toLang: String = "japanese"
 
     let urlString = "https://api.openai.com/v1/chat/completions"
     let url = URL(string: urlString)!
@@ -91,6 +94,13 @@ func getOpenAIResponse(messages: [[String: Any]], completion: @escaping (String?
     request.httpMethod = "POST"
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+
+    let messages: [[String: Any]] = [
+        ["role": "user", "content": "translate to " + toLang + "：" + text],
+//                ["role": "assistant", "content": "Hi there, how can I help you today?"],
+//                ["role": "user", "content": "I need help with a problem"],
+//                ["role": "assistant", "content": "Sure, what kind of problem are you experiencing?"],
+    ]
 
     let parameters: [String: Any] = [
         "model": "gpt-3.5-turbo",
@@ -155,13 +165,8 @@ class ZTranslatorApp: App {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
             let text = getSelectedText()
-            let messages: [[String: Any]] = [
-                ["role": "user", "content": "translate to japanese：" + (text ?? "")],
-//                ["role": "assistant", "content": "Hi there, how can I help you today?"],
-//                ["role": "user", "content": "I need help with a problem"],
-//                ["role": "assistant", "content": "Sure, what kind of problem are you experiencing?"],
-            ]
-            getOpenAIResponse(messages: messages) { (response, error) in
+
+            getOpenAIResponse(text: text ?? "") { (response, error) in
                 if let error = error {
                     print("Error: \(error)")
                     NotificationCenter.default.post(name: .selectedTextChanged, object: error)
@@ -173,7 +178,6 @@ class ZTranslatorApp: App {
                     NotificationCenter.default.post(name: .selectedTextChanged, object: "No response")
                 }
             }
-//            NotificationCenter.default.post(name: .selectedTextChanged, object: text)
         }
     }
 }
