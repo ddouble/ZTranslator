@@ -24,10 +24,15 @@ struct TranslatorView: View {
         }
             .padding()
             .onAppear {
+                NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
+                    NSApplication.shared.windows.first?.orderFrontRegardless()
+                }
+
                 NotificationCenter.default.addObserver(forName: .selectedTextChanged, object: nil, queue: .main) { notification in
                     if let newText = notification.object as? String {
                         self.text = newText
                     }
+                    NSApplication.shared.windows.first?.orderFrontRegardless()
                 }
             }
 

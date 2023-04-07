@@ -151,6 +151,7 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
 
 
 extension Notification.Name {
+    static let wakeUp = Notification.Name("WakeUp")
     static let selectedTextChanged = Notification.Name("SelectedTextChanged")
 }
 
@@ -178,7 +179,8 @@ class ZTranslatorApp: App {
             if (text.isEmpty) {
                 text = "can't get the text"
             }
-            bringWindowToFront(windowTitle: "ZTranslator")
+
+            NotificationCenter.default.post(name: .wakeUp, object: nil)
 
             getOpenAIResponse(text: text) { (response, error) in
                 if let error = error {
