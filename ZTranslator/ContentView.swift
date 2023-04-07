@@ -11,26 +11,31 @@ import MASShortcut
 
 
 struct ContentView: View {
+    @State var text: String
     var body: some View {
         VStack {
             Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+                    .imageScale(.large)
+                    .foregroundColor(.accentColor)
+            Text(text).font(
+                    .system(size: 20, design: .monospaced)
+//                    .custom("Verdana", size: 20)
+            )
         }
-        .padding()
-        .onAppear {
-//            let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: NSEvent.ModifierFlags(arrayLiteral: .control, .command))
-//            MASShortcutMonitor.shared().register(shortcut, withAction: {
-//                print("CTRL+CMD+X keystroke was captured!")
-//            })
-        }
-        
+                .padding()
+                .onAppear {
+                    NotificationCenter.default.addObserver(forName: .selectedTextChanged, object: nil, queue: .main) { notification in
+                        if let newText = notification.object as? String {
+                            self.text = newText
+                        }
+                    }
+                }
+
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(text: "Hello world")
     }
 }

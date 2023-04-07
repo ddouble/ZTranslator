@@ -74,25 +74,26 @@ func sendTextToClipboard() {
     NSPasteboard.general.setString("Text to copy", forType: .string)
 }
 
+
+extension Notification.Name {
+    static let selectedTextChanged = Notification.Name("SelectedTextChanged")
+}
+
 @main
-struct ZTranslatorApp: App {
+class ZTranslatorApp: App {
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(text: "Translation will be here")
         }
     }
 
 
-    init() {
+    required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
-//            print("CTRL+CMD+X pressed")
-
-
-//            let selectedText = getSelectedText2()
-            let selectedText = getSelectedText()
-            print(selectedText ?? "")
-
+            let text = getSelectedText()
+            NotificationCenter.default.post(name: .selectedTextChanged, object: text)
         }
     }
 }
