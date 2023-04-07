@@ -140,7 +140,7 @@ class ZTranslatorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(text: "Translation will be here")
+            TranslatorView(text: "Translation will be here")
         }
 
         #if os(macOS)

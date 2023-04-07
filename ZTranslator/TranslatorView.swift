@@ -10,7 +10,7 @@ import Cocoa
 import MASShortcut
 
 
-struct ContentView: View {
+struct TranslatorView: View {
     @State var text: String
     var body: some View {
         VStack {
@@ -36,6 +36,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(text: "Hello world")
+        TranslatorView(text: "Hello world")
     }
 }

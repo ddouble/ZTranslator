@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5605C62429DD6B4500454941 /* ZTranslatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5605C62329DD6B4500454941 /* ZTranslatorApp.swift */; };
-		5605C62629DD6B4500454941 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5605C62529DD6B4500454941 /* ContentView.swift */; };
+		5605C62629DD6B4500454941 /* TranslatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5605C62529DD6B4500454941 /* TranslatorView.swift */; };
 		5605C62829DD6B4700454941 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5605C62729DD6B4700454941 /* Assets.xcassets */; };
 		5605C62B29DD6B4700454941 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5605C62A29DD6B4700454941 /* Preview Assets.xcassets */; };
 		5605C63629DD6B4800454941 /* ZTranslatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5605C63529DD6B4800454941 /* ZTranslatorTests.swift */; };
@@ -39,7 +39,7 @@
 /* Begin PBXFileReference section */
 		5605C62029DD6B4500454941 /* ZTranslator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZTranslator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5605C62329DD6B4500454941 /* ZTranslatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZTranslatorApp.swift; sourceTree = "<group>"; };
-		5605C62529DD6B4500454941 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5605C62529DD6B4500454941 /* TranslatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorView.swift; sourceTree = "<group>"; };
 		5605C62729DD6B4700454941 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5605C62A29DD6B4700454941 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5605C62C29DD6B4700454941 /* ZTranslator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ZTranslator.entitlements; sourceTree = "<group>"; };
@@ -105,7 +105,7 @@
 			children = (
 				5605C64E29DD849200454941 /* Info.plist */,
 				5605C62329DD6B4500454941 /* ZTranslatorApp.swift */,
-				5605C62529DD6B4500454941 /* ContentView.swift */,
+				5605C62529DD6B4500454941 /* TranslatorView.swift */,
 				5605C62729DD6B4700454941 /* Assets.xcassets */,
 				5605C62C29DD6B4700454941 /* ZTranslator.entitlements */,
 				5605C62929DD6B4700454941 /* Preview Content */,
@@ -276,7 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5605C62629DD6B4500454941 /* ContentView.swift in Sources */,
+				5605C62629DD6B4500454941 /* TranslatorView.swift in Sources */,
 				5605C62429DD6B4500454941 /* ZTranslatorApp.swift in Sources */,
 				5AE6A98DDD33605E6C081909 /* ZTranslatorSettings.swift in Sources */,
 			);
