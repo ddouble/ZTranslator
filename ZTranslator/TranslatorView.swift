@@ -25,6 +25,7 @@ struct TranslatorView: View {
             .padding()
             .onAppear {
                 NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
+                    self.text = "Translating ... "
                     NSApplication.shared.windows.first?.orderFrontRegardless()
                 }
 
