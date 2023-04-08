@@ -37,7 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5605C62029DD6B4500454941 /* ZTranslator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZTranslator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5605C62329DD6B4500454941 /* ZTranslatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZTranslatorApp.swift; sourceTree = "<group>"; };
 		5605C62529DD6B4500454941 /* TranslatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorView.swift; sourceTree = "<group>"; };
 		5605C62729DD6B4700454941 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -93,7 +92,6 @@
 		5605C62129DD6B4500454941 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5605C62029DD6B4500454941 /* ZTranslator.app */,
 				5605C63129DD6B4800454941 /* ZTranslatorTests.xctest */,
 				5605C63B29DD6B4800454941 /* ZTranslatorUITests.xctest */,
 			);
@@ -159,7 +157,6 @@
 				56F858AE29DEDBAF00AA46E3 /* MASShortcut */,
 			);
 			productName = ZTranslator;
-			productReference = 5605C62029DD6B4500454941 /* ZTranslator.app */;
 			productType = "com.apple.product-type.application";
 		};
 		5605C63029DD6B4800454941 /* ZTranslatorTests */ = {
