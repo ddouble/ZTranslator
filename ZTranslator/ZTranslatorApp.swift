@@ -294,7 +294,7 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
    - callback:
  - Returns:
  */
-func checkingMousePosition(area: NSRect, callback: @escaping (Bool) -> Void) -> Timer {
+func monitorMousePosition(area: NSRect, callback: @escaping (Bool) -> Void) -> Timer {
     let timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
         let point = NSEvent.mouseLocation
         let isPointInArea = area.contains(point)
@@ -336,7 +336,7 @@ extension Notification.Name {
 @main
 class ZTranslatorApp: App {
     private var translatorPopup: FloatingPanel?
-    private var popupTimer: Timer?
+    private var translatorPopupTimer: Timer?
 
     var body: some Scene {
 //        WindowGroup {
@@ -350,39 +350,48 @@ class ZTranslatorApp: App {
         #endif
     }
 
+    func showTranslatorPopup() {
+        if self.translatorPopupTimer != nil && self.translatorPopupTimer?.isValid == true {
+            self.translatorPopupTimer?.invalidate()
+        }
+
+        // Shows the translator popup and makes it topmost
+        if self.translatorPopup == nil {
+            self.translatorPopup = FloatingPanel(contentRect: NSRect(x: 1000, y: 100, width: 800, height: 300), backing: .buffered, defer: false)
+            self.translatorPopup?.contentView = NSHostingView(rootView: TranslatorView(text: "Translation will be here"))
+        }
+
+        if let popup = self.translatorPopup {
+            let mouseLocation = NSEvent.mouseLocation
+
+            // move popup to new positon
+            let popupPosition = NSPoint(
+                x: mouseLocation.x + 10,
+                y: mouseLocation.y - 20 - popup.frame.size.height
+            )
+            popup.setFrameOrigin(popupPosition)
+//            popup.setIsVisible(true)
+            popup.orderFront(nil)
+            print(1, popup.isVisible)
+
+
+            var area = popup.frame
+            resizeRectFromCenter(&area, xAmount: 40, yAmount: 80)
+            self.translatorPopupTimer = monitorMousePosition(area: area) { (isPointInArea) in
+                if (!isPointInArea) {
+                    print("hide")
+                    popup.orderOut(nil)
+                    print(2, popup.isVisible)
+                }
+            }
+        }
+    }
 
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
-
-            // Shows the translator popup and makes it topmost
-            if self.popupTimer != nil {
-                self.popupTimer?.invalidate()
-            }
-            if self.translatorPopup == nil {
-                self.translatorPopup = FloatingPanel(contentRect: NSRect(x: 1000, y: 100, width: 800, height: 300), backing: .buffered, defer: false)
-                self.translatorPopup?.contentView = NSHostingView(rootView: TranslatorView(text: "Translation will be here"))
-            }
-            self.translatorPopup?.orderFrontRegardless()
-
-            if let popup = self.translatorPopup {
-                let mouseLocation = NSEvent.mouseLocation
-
-                // move popup to new positon
-                let popupPosition = NSPoint(
-                    x: mouseLocation.x + 10,
-                    y: mouseLocation.y - 20 - popup.frame.size.height
-                )
-                popup.setFrameOrigin(popupPosition)
-
-                var area = popup.frame
-                resizeRectFromCenter(&area, xAmount: 40, yAmount: 80)
-                let _ = checkingMousePosition(area: area) {(isPointInArea) in
-                    if (!isPointInArea) {
-                        popup.orderOut(nil)
-                    }
-                }
-            }
+            print(shortcut)
+            self.showTranslatorPopup()
 
             getSelectedText() { (text) in
 

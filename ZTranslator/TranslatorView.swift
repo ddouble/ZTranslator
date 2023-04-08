@@ -20,21 +20,22 @@ struct TranslatorView: View {
 //                    .custom("Verdana", size: 20)
                 ).padding()
                 Spacer()
-            }.padding()
+            }
+                .padding()
             Spacer()
         }
             .padding()
             .onAppear() {
                 NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
-                    self.text = "Translating ... "
-                    NSApplication.shared.windows.first?.orderFrontRegardless()
+                    self.text = " ... "
+//                    NSApplication.shared.windows.first?.orderFrontRegardless()
                 }
 
                 NotificationCenter.default.addObserver(forName: .selectedTextChanged, object: nil, queue: .main) { notification in
                     if let newText = notification.object as? String {
                         self.text = newText
                     }
-                    NSApplication.shared.windows.first?.orderFrontRegardless()
+//                    NSApplication.shared.windows.first?.orderFrontRegardless()
                 }
             }
 
