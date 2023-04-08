@@ -77,6 +77,44 @@ func getSelectedText2() -> String? {
 
 }
 
+
+func getSelectedTextRect() {
+    let systemWideElement = AXUIElementCreateSystemWide()
+    var focusedElement : AnyObject?
+
+    let error = AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedUIElementAttribute as CFString, &focusedElement)
+    if (error != .success){
+        print("Couldn't get the focused element. Probably a webkit application")
+    } else {
+        var selectedRangeValue : AnyObject?
+        let selectedRangeError = AXUIElementCopyAttributeValue(focusedElement as! AXUIElement, kAXSelectedTextRangeAttribute as CFString, &selectedRangeValue)
+        if (selectedRangeError == .success){
+            var selectedRange : CFRange?
+            AXValueGetValue(selectedRangeValue as! AXValue, AXValueType(rawValue: kAXValueCFRangeType)!, &selectedRange)
+            var selectRect = CGRect()
+            var selectBounds : AnyObject?
+            let selectedBoundsError = AXUIElementCopyParameterizedAttributeValue(focusedElement as! AXUIElement, kAXBoundsForRangeParameterizedAttribute as CFString, selectedRangeValue!, &selectBounds)
+            if (selectedBoundsError == .success){
+                AXValueGetValue(selectBounds as! AXValue, .cgRect, &selectRect)
+                //do whatever you want with your selectRect
+                print(selectRect)
+            }
+        }
+    }
+}
+
+
+func sendCopyCommand() {
+//    let pasteBoard = NSPasteboard.general
+    let keyDownEvent = NSEvent.keyEvent(with: .keyDown, location: NSPoint(), modifierFlags: [.control], timestamp: 0, windowNumber: 0, context: nil, characters: "", charactersIgnoringModifiers: "", isARepeat: false, keyCode: 8)
+    let keyUpEvent = NSEvent.keyEvent(with: .keyUp, location: NSPoint(), modifierFlags: [.control], timestamp: 0, windowNumber: 0, context: nil, characters: "", charactersIgnoringModifiers: "", isARepeat: false, keyCode: 8)
+
+//    pasteBoard.clearContents()
+//    pasteBoard.writeObjects([""]) // This will copy an empty string to the clipboard
+    NSApplication.shared.sendEvent(keyDownEvent!)
+    NSApplication.shared.sendEvent(keyUpEvent!)
+}
+
 /**
  An extension to get selected text from any running App
 
