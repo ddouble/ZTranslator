@@ -64,12 +64,16 @@ func getSelectedText2() -> String? {
     // Get the selected text range
     var selectedRange: AnyObject?
     let error2 = AXUIElementCopyAttributeValue(focusedElement as! AXUIElement, kAXSelectedTextRangeAttribute as CFString, &selectedRange)
-    guard error2 == .success else { return nil }
+    guard error2 == .success else {
+        return nil
+    }
 
     // Get the selected text using the selected range
     var selectedText: AnyObject?
     let error3 = AXUIElementCopyParameterizedAttributeValue(focusedElement as! AXUIElement, kAXStringForRangeParameterizedAttribute as CFString, selectedRange as CFTypeRef, &selectedText)
-    guard error3 == .success else { return nil }
+    guard error3 == .success else {
+        return nil
+    }
 
     let s = selectedText as! String
     print(s)
@@ -80,21 +84,21 @@ func getSelectedText2() -> String? {
 
 func getSelectedTextRect() {
     let systemWideElement = AXUIElementCreateSystemWide()
-    var focusedElement : AnyObject?
+    var focusedElement: AnyObject?
 
     let error = AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedUIElementAttribute as CFString, &focusedElement)
-    if (error != .success){
+    if (error != .success) {
         print("Couldn't get the focused element. Probably a webkit application")
     } else {
-        var selectedRangeValue : AnyObject?
+        var selectedRangeValue: AnyObject?
         let selectedRangeError = AXUIElementCopyAttributeValue(focusedElement as! AXUIElement, kAXSelectedTextRangeAttribute as CFString, &selectedRangeValue)
-        if (selectedRangeError == .success){
-            var selectedRange : CFRange?
+        if (selectedRangeError == .success) {
+            var selectedRange: CFRange?
             AXValueGetValue(selectedRangeValue as! AXValue, AXValueType(rawValue: kAXValueCFRangeType)!, &selectedRange)
             var selectRect = CGRect()
-            var selectBounds : AnyObject?
+            var selectBounds: AnyObject?
             let selectedBoundsError = AXUIElementCopyParameterizedAttributeValue(focusedElement as! AXUIElement, kAXBoundsForRangeParameterizedAttribute as CFString, selectedRangeValue!, &selectBounds)
-            if (selectedBoundsError == .success){
+            if (selectedBoundsError == .success) {
                 AXValueGetValue(selectBounds as! AXValue, .cgRect, &selectRect)
                 //do whatever you want with your selectRect
                 print(selectRect)
@@ -163,26 +167,28 @@ func getSelectedText(completion: @escaping (String?) -> Void) {
 
  */
 extension AXUIElement {
-  static var focusedElement: AXUIElement? {
-    systemWide.element(for: kAXFocusedUIElementAttribute)
-  }
-  
-  var selectedText: String? {
-    rawValue(for: kAXSelectedTextAttribute) as? String
-  }
-  
-  private static var systemWide = AXUIElementCreateSystemWide()
-  
-  private func element(for attribute: String) -> AXUIElement? {
-    guard let rawValue = rawValue(for: attribute), CFGetTypeID(rawValue) == AXUIElementGetTypeID() else { return nil }
-    return (rawValue as! AXUIElement)
-  }
-  
-  private func rawValue(for attribute: String) -> AnyObject? {
-    var rawValue: AnyObject?
-    let error = AXUIElementCopyAttributeValue(self, attribute as CFString, &rawValue)
-    return error == .success ? rawValue : nil
-  }
+    static var focusedElement: AXUIElement? {
+        systemWide.element(for: kAXFocusedUIElementAttribute)
+    }
+
+    var selectedText: String? {
+        rawValue(for: kAXSelectedTextAttribute) as? String
+    }
+
+    private static var systemWide = AXUIElementCreateSystemWide()
+
+    private func element(for attribute: String) -> AXUIElement? {
+        guard let rawValue = rawValue(for: attribute), CFGetTypeID(rawValue) == AXUIElementGetTypeID() else {
+            return nil
+        }
+        return (rawValue as! AXUIElement)
+    }
+
+    private func rawValue(for attribute: String) -> AnyObject? {
+        var rawValue: AnyObject?
+        let error = AXUIElementCopyAttributeValue(self, attribute as CFString, &rawValue)
+        return error == .success ? rawValue : nil
+    }
 }
 
 
@@ -235,7 +241,8 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
     request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 
     let messages: [[String: Any]] = [
-        ["role": "user", "content": "translate to " + toLang + "：" + text],
+        ["role": "system", "content": "translate to " + toLang],
+        ["role": "user", "content": text],
 //                ["role": "assistant", "content": "Hi there, how can I help you today?"],
 //                ["role": "user", "content": "I need help with a problem"],
 //                ["role": "assistant", "content": "Sure, what kind of problem are you experiencing?"],
