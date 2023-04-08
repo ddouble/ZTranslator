@@ -13,17 +13,18 @@ import MASShortcut
 struct TranslatorView: View {
     @State var text: String
     var body: some View {
-        VStack {
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundColor(.accentColor)
-            Text(text).font(
-                .system(size: 36, design: .monospaced)
+        HStack {
+            VStack {
+                Text(text).font(
+                    .system(size: 36, design: .monospaced)
 //                    .custom("Verdana", size: 20)
-            )
+                ).padding()
+                Spacer()
+            }.padding()
+            Spacer()
         }
             .padding()
-            .onAppear {
+            .onAppear() {
                 NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
                     self.text = "Translating ... "
                     NSApplication.shared.windows.first?.orderFrontRegardless()

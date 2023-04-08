@@ -289,16 +289,20 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
 extension Notification.Name {
     static let wakeUp = Notification.Name("WakeUp")
     static let selectedTextChanged = Notification.Name("SelectedTextChanged")
+    static let closeTranslatorPopup = Notification.Name("CloseTranslatorPopup")
+
 }
 
 
 @main
 class ZTranslatorApp: App {
+    private var translatorPopup: FloatingPanel?
+    private var popupTimer: Timer?
 
     var body: some Scene {
-        WindowGroup {
-            TranslatorView(text: "Translation will be here")
-        }
+//        WindowGroup {
+//            TranslatorView(text: "Translation will be here")
+//        }
 
         #if os(macOS)
         Settings {
@@ -311,6 +315,23 @@ class ZTranslatorApp: App {
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
+            // Shows the translator popup and makes it topmost
+            if self.popupTimer != nil {
+                self.popupTimer?.invalidate()
+            }
+            if self.translatorPopup == nil {
+                self.translatorPopup = FloatingPanel(contentRect: NSRect(x: 1000, y: 100, width: 800, height: 300), backing: .buffered, defer: false)
+                self.translatorPopup?.contentView = NSHostingView(rootView: TranslatorView(text: "Translation will be here"))
+            }
+            self.translatorPopup?.orderFrontRegardless()
+
+            let timeoutSeconds = 5.0
+            self.popupTimer = Timer.scheduledTimer(withTimeInterval: timeoutSeconds, repeats: false) { (_) in
+                if (self.translatorPopup != nil) {
+                    self.translatorPopup?.orderOut(nil)
+                }
+            }
+
             getSelectedText() { (text) in
 
                 NotificationCenter.default.post(name: .wakeUp, object: nil)
