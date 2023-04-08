@@ -370,18 +370,17 @@ class ZTranslatorApp: App {
                 y: mouseLocation.y - 20 - popup.frame.size.height
             )
             popup.setFrameOrigin(popupPosition)
-//            popup.setIsVisible(true)
-            popup.orderFront(nil)
-            print(1, popup.isVisible)
+            popup.makeKeyAndOrderFront(nil)
+            print("1 visible:", popup.isVisible)
 
 
             var area = popup.frame
             resizeRectFromCenter(&area, xAmount: 40, yAmount: 80)
             self.translatorPopupTimer = monitorMousePosition(area: area) { (isPointInArea) in
                 if (!isPointInArea) {
-                    print("hide")
+//                    print("hide")
                     popup.orderOut(nil)
-                    print(2, popup.isVisible)
+                    print("2 visible:", popup.isVisible)
                 }
             }
         }
@@ -402,10 +401,10 @@ class ZTranslatorApp: App {
                         print("Error: \(error)")
                         NotificationCenter.default.post(name: .selectedTextChanged, object: error)
                     } else if let response = response {
-                        print("Response: \(response)")
+//                        print("Response: \(response)")
                         NotificationCenter.default.post(name: .selectedTextChanged, object: response)
                     } else {
-                        print("No response")
+//                        print("No response")
                         NotificationCenter.default.post(name: .selectedTextChanged, object: "No response")
                     }
                 }
