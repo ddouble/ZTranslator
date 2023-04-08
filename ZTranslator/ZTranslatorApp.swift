@@ -12,6 +12,7 @@ import SwiftUI
 import Cocoa
 import MASShortcut
 import Foundation
+import AppKit
 
 /**
  Get selected text from any running App
@@ -285,6 +286,44 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
     task.resume()
 }
 
+/**
+ report to caller if mouse point is in a specific area
+
+ - Parameters:
+   - area:
+   - callback:
+ - Returns:
+ */
+func checkingMousePosition(area: NSRect, callback: @escaping (Bool) -> Void) -> Timer {
+    let timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
+        let point = NSEvent.mouseLocation
+        let isPointInArea = area.contains(point)
+        callback(isPointInArea)
+        if !isPointInArea {
+            timer.invalidate()
+//            print("Point is out of area, stopping timer")
+        } else {
+//            print("Point is within area")
+        }
+    }
+    return timer
+}
+
+/**
+ resize a rect from its center by x, y amount
+ 
+ - Parameters:
+   - rect:
+   - xAmount:
+   - yAmount:
+ */
+func resizeRectFromCenter(_ rect: inout NSRect, xAmount: CGFloat, yAmount: CGFloat) {
+    rect.origin.x -= xAmount / 2
+    rect.origin.y -= yAmount / 2
+    rect.size.width += xAmount
+    rect.size.height += yAmount
+}
+
 
 extension Notification.Name {
     static let wakeUp = Notification.Name("WakeUp")
@@ -315,6 +354,7 @@ class ZTranslatorApp: App {
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
+
             // Shows the translator popup and makes it topmost
             if self.popupTimer != nil {
                 self.popupTimer?.invalidate()
@@ -325,12 +365,31 @@ class ZTranslatorApp: App {
             }
             self.translatorPopup?.orderFrontRegardless()
 
-            let timeoutSeconds = 5.0
-            self.popupTimer = Timer.scheduledTimer(withTimeInterval: timeoutSeconds, repeats: false) { (_) in
-                if (self.translatorPopup != nil) {
-                    self.translatorPopup?.orderOut(nil)
+            if let popup = self.translatorPopup {
+                let mouseLocation = NSEvent.mouseLocation
+
+                // move popup to new positon
+                let popupPosition = NSPoint(
+                    x: mouseLocation.x + 10,
+                    y: mouseLocation.y - 20 - popup.frame.size.height
+                )
+                popup.setFrameOrigin(popupPosition)
+
+                var area = popup.frame
+                resizeRectFromCenter(&area, xAmount: 40, yAmount: 80)
+                let _ = checkingMousePosition(area: area) {(isPointInArea) in
+                    if (!isPointInArea) {
+                        popup.orderOut(nil)
+                    }
                 }
             }
+
+//            let timeoutSeconds = 5.0
+//            self.popupTimer = Timer.scheduledTimer(withTimeInterval: timeoutSeconds, repeats: false) { (_) in
+//                if (self.translatorPopup != nil) {
+//                    self.translatorPopup?.orderOut(nil)
+//                }
+//            }
 
             getSelectedText() { (text) in
 
