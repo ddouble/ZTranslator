@@ -100,9 +100,9 @@ func getClipboardText() -> String? {
 /**
  Send text to clipboard
  */
-func sendTextToClipboard() {
+func putTextToClipboard(text: String) {
     NSPasteboard.general.clearContents()
-    NSPasteboard.general.setString("Text to copy", forType: .string)
+    NSPasteboard.general.setString(text, forType: .string)
 }
 
 /**
