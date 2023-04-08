@@ -370,7 +370,7 @@ class ZTranslatorApp: App {
                 y: mouseLocation.y - 20 - popup.frame.size.height
             )
             popup.setFrameOrigin(popupPosition)
-            popup.makeKeyAndOrderFront(nil)
+            popup.orderFront(nil)
             print("1 visible:", popup.isVisible)
 
 
@@ -389,10 +389,9 @@ class ZTranslatorApp: App {
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
-            print(shortcut)
-            self.showTranslatorPopup()
 
             getSelectedText() { (text) in
+                self.showTranslatorPopup()
 
                 NotificationCenter.default.post(name: .wakeUp, object: nil)
 
