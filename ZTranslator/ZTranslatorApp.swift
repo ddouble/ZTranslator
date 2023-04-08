@@ -39,6 +39,13 @@ func getSelectedText() -> String? {
     return selectedTextValue as? String
 }
 
+/**
+ An extension to get selected text from any running App
+
+ Usage:
+    AXUIElement.focusedElement?.selectedText
+
+ */
 extension AXUIElement {
   static var focusedElement: AXUIElement? {
     systemWide.element(for: kAXFocusedUIElementAttribute)
