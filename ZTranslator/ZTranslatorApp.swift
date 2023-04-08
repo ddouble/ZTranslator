@@ -17,7 +17,7 @@ import Foundation
  Get selected text from any running App
  - Returns:
  */
-func getSelectedText() -> String? {
+func getSelectedTextByApi() -> String? {
     let systemWideElement = AXUIElementCreateSystemWide()
     var focusedApp: AnyObject?
     let error = AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedApplicationAttribute as CFString, &focusedApp)
@@ -104,7 +104,18 @@ func getSelectedTextRect() {
 }
 
 
-func sendCopyCommand() {
+func getSelectedTextByClipboard(completion: @escaping (String?) -> Void) {
+    sendGlobalCopyShortcut()
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { // wait 0.05s for copy.
+        let clipboardText = getClipboardText() ?? ""
+//        print(clipboardText)
+        completion(clipboardText)
+    }
+}
+
+
+func sendCopyCommand2() {
 //    let pasteBoard = NSPasteboard.general
     let keyDownEvent = NSEvent.keyEvent(with: .keyDown, location: NSPoint(), modifierFlags: [.control], timestamp: 0, windowNumber: 0, context: nil, characters: "", charactersIgnoringModifiers: "", isARepeat: false, keyCode: 8)
     let keyUpEvent = NSEvent.keyEvent(with: .keyUp, location: NSPoint(), modifierFlags: [.control], timestamp: 0, windowNumber: 0, context: nil, characters: "", charactersIgnoringModifiers: "", isARepeat: false, keyCode: 8)
@@ -113,6 +124,35 @@ func sendCopyCommand() {
 //    pasteBoard.writeObjects([""]) // This will copy an empty string to the clipboard
     NSApplication.shared.sendEvent(keyDownEvent!)
     NSApplication.shared.sendEvent(keyUpEvent!)
+}
+
+func sendGlobalCopyShortcut() {
+
+    func keyEvents(forPressAndReleaseVirtualKey virtualKey: Int) -> [CGEvent] {
+        let eventSource = CGEventSource(stateID: .hidSystemState)
+        return [
+            CGEvent(keyboardEventSource: eventSource, virtualKey: CGKeyCode(virtualKey), keyDown: true)!,
+            CGEvent(keyboardEventSource: eventSource, virtualKey: CGKeyCode(virtualKey), keyDown: false)!,
+        ]
+    }
+
+    let tapLocation = CGEventTapLocation.cghidEventTap
+    let events = keyEvents(forPressAndReleaseVirtualKey: kVK_ANSI_C)
+
+    events.forEach {
+        $0.flags = .maskCommand
+        $0.post(tap: tapLocation)
+    }
+}
+
+func getSelectedText(completion: @escaping (String?) -> Void) {
+    let text = getSelectedTextByApi() ?? ""
+    if (text.isEmpty) {
+        getSelectedTextByClipboard(completion: completion)
+        return
+    }
+
+    completion(text)
 }
 
 /**
@@ -264,24 +304,21 @@ class ZTranslatorApp: App {
     required init() {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
-            var text = getSelectedText() ?? ""
-//            var text = AXUIElement.focusedElement?.selectedText ?? ""
-            if (text.isEmpty) {
-                text = "can't get the text"
-            }
+            getSelectedText() { (text) in
 
-            NotificationCenter.default.post(name: .wakeUp, object: nil)
+                NotificationCenter.default.post(name: .wakeUp, object: nil)
 
-            getOpenAIResponse(text: text) { (response, error) in
-                if let error = error {
-                    print("Error: \(error)")
-                    NotificationCenter.default.post(name: .selectedTextChanged, object: error)
-                } else if let response = response {
-                    print("Response: \(response)")
-                    NotificationCenter.default.post(name: .selectedTextChanged, object: response)
-                } else {
-                    print("No response")
-                    NotificationCenter.default.post(name: .selectedTextChanged, object: "No response")
+                getOpenAIResponse(text: text ?? "") { (response, error) in
+                    if let error = error {
+                        print("Error: \(error)")
+                        NotificationCenter.default.post(name: .selectedTextChanged, object: error)
+                    } else if let response = response {
+                        print("Response: \(response)")
+                        NotificationCenter.default.post(name: .selectedTextChanged, object: response)
+                    } else {
+                        print("No response")
+                        NotificationCenter.default.post(name: .selectedTextChanged, object: "No response")
+                    }
                 }
             }
         }
