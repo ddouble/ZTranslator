@@ -2,7 +2,7 @@
 //  ZTranslatorApp.swift
 //  ZTranslator
 //
-//  In order to capture global keyboard shortcut and get selected text from any running App window, you have to add give
+//  In order to capture global keyboard shortcut and get selected text from any running App window, you have to give
 //  Accessibility permission to the ZTranslator App
 //  1. Open Setting -> Privacy & Security -> Accessibility
 //  2. Add the ZTranslator App or Xcode or AppCode or Terminal as per your using case to the Accessibility allowed list
