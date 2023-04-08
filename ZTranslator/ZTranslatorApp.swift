@@ -27,7 +27,10 @@ func getSelectedText() -> String? {
     }
 
     var focusedElement: AnyObject?
-    if AXUIElementCopyAttributeValue(focusedApp as! AXUIElement, kAXFocusedUIElementAttribute as CFString, &focusedElement) != .success {
+//    if AXUIElementCopyAttributeValue(focusedApp as! AXUIElement, kAXFocusedUIElementAttribute as CFString, &focusedElement) != .success {
+//        return nil
+//    }
+    if AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedUIElementAttribute as CFString, &focusedElement) != .success {
         return nil
     }
 
@@ -37,6 +40,41 @@ func getSelectedText() -> String? {
     }
 
     return selectedTextValue as? String
+}
+
+
+/**
+ Another way to get selected text from any running App
+ - Returns:
+ */
+func getSelectedText2() -> String? {
+    let systemWideElement = AXUIElementCreateSystemWide()
+    var focusedApp: AnyObject?
+    let error = AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedApplicationAttribute as CFString, &focusedApp)
+
+    if error != .success {
+        return nil
+    }
+
+    var focusedElement: AnyObject?
+    if AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedUIElementAttribute as CFString, &focusedElement) != .success {
+        return nil
+    }
+
+    // Get the selected text range
+    var selectedRange: AnyObject?
+    let error2 = AXUIElementCopyAttributeValue(focusedElement as! AXUIElement, kAXSelectedTextRangeAttribute as CFString, &selectedRange)
+    guard error2 == .success else { return nil }
+
+    // Get the selected text using the selected range
+    var selectedText: AnyObject?
+    let error3 = AXUIElementCopyParameterizedAttributeValue(focusedElement as! AXUIElement, kAXStringForRangeParameterizedAttribute as CFString, selectedRange as CFTypeRef, &selectedText)
+    guard error3 == .success else { return nil }
+
+    let s = selectedText as! String
+    print(s)
+    return s
+
 }
 
 /**
@@ -69,23 +107,6 @@ extension AXUIElement {
   }
 }
 
-
-/**
- this function DOESN'T WORK
-
- Get selected text from any running App,
- - Returns:
- */
-func getSelectedText2() -> String? {
-    guard let textView = NSApplication.shared.keyWindow?.firstResponder as? NSTextView,
-          let selectedRange = textView.selectedRanges.first as? NSRange,
-          let selectedText = textView.textStorage?.string,
-          let range = Range(selectedRange, in: selectedText)
-    else {
-        return ""
-    }
-    return String(selectedText[range])
-}
 
 /**
  get clipboard text
