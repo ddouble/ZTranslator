@@ -311,7 +311,7 @@ func checkingMousePosition(area: NSRect, callback: @escaping (Bool) -> Void) -> 
 
 /**
  resize a rect from its center by x, y amount
- 
+
  - Parameters:
    - rect:
    - xAmount:
@@ -383,13 +383,6 @@ class ZTranslatorApp: App {
                     }
                 }
             }
-
-//            let timeoutSeconds = 5.0
-//            self.popupTimer = Timer.scheduledTimer(withTimeInterval: timeoutSeconds, repeats: false) { (_) in
-//                if (self.translatorPopup != nil) {
-//                    self.translatorPopup?.orderOut(nil)
-//                }
-//            }
 
             getSelectedText() { (text) in
 
