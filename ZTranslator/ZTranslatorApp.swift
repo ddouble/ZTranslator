@@ -108,14 +108,23 @@ func getSelectedTextRect() {
     }
 }
 
-
+/**
+ Get selected text from any running App by clipboard
+ - Parameter completion:
+ */
 func getSelectedTextByClipboard(completion: @escaping (String?) -> Void) {
+    // store the original text to clipboard
+    let originalTextInClipboard = getClipboardText() ?? ""
+
     sendGlobalCopyShortcut()
 
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { // wait 0.05s for copy.
         let clipboardText = getClipboardText() ?? ""
 //        print(clipboardText)
         completion(clipboardText)
+
+        // restore the original text to clipboard
+        putTextToClipboard(text: originalTextInClipboard)
     }
 }
 
