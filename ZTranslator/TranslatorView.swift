@@ -14,11 +14,9 @@ func getFontSize(for text: String, minimumSize minSize: CGFloat, maximumSize max
     print(length, minSize, maxSize, minLengthThreshold, maxLengthThreshold)
     if length < minLengthThreshold {
         return maxSize
-    }
-    else if length > maxLengthThreshold {
+    } else if length > maxLengthThreshold {
         return minSize
-    }
-    else {
+    } else {
         let fontRatio = (CGFloat(length) - CGFloat(minLengthThreshold)) / (CGFloat(maxLengthThreshold) - CGFloat(minLengthThreshold))
         print(fontRatio, Int(maxSize - fontRatio * (maxSize - minSize)))
         return CGFloat(Int(maxSize - fontRatio * (maxSize - minSize)))
@@ -30,17 +28,14 @@ struct TranslatorView: View {
     @State var fontSize: CGFloat = 36
     var body: some View {
         HStack {
-            VStack {
+            ScrollView {
                 Text(text).font(
                     .system(size: fontSize, design: .monospaced)
 //                    .custom("Verdana", size: 20)
-                ).padding()
-                Spacer()
+                ).padding(CGFloat(0.6 * fontSize)).lineSpacing(CGFloat(0.2 * fontSize))
             }
-                .padding()
-            Spacer()
+                .frame(minWidth: 800)
         }
-            .padding()
             .onAppear() {
                 NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
                     self.fontSize = 36
