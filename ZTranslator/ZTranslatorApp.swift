@@ -140,6 +140,9 @@ func sendCopyCommand2() {
     NSApplication.shared.sendEvent(keyUpEvent!)
 }
 
+/**
+ Send CTRL+C COPY shortcut to system, it can put current selected text to clipboard
+ */
 func sendGlobalCopyShortcut() {
 
     func keyEvents(forPressAndReleaseVirtualKey virtualKey: Int) -> [CGEvent] {
@@ -159,6 +162,10 @@ func sendGlobalCopyShortcut() {
     }
 }
 
+/**
+ Get selected text from any running App
+ - Parameter completion:
+ */
 func getSelectedText(completion: @escaping (String?) -> Void) {
     let text = getSelectedTextByApi() ?? ""
     if (text.isEmpty) {
