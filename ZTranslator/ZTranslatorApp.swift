@@ -340,6 +340,72 @@ func resizeRectFromCenter(_ rect: inout NSRect, xAmount: CGFloat, yAmount: CGFlo
     rect.size.height += yAmount
 }
 
+/**
+ Get usable area of screen
+ - Returns:
+ */
+func getScreenViewportRect() -> NSRect {
+    // Get the primary screen
+    let screen = NSScreen.main
+    // Get the screen size and bounds
+//    let screenSize = screen?.frame
+    let screenBounds = screen?.visibleFrame
+
+    // Get the height of the menu bar
+    let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 0.0
+    // Get the height of the title bar
+    let titleBarHeight = NSWindow.contentRect(forFrameRect: NSMakeRect(0, 0, 100, 100), styleMask: [.titled]).height
+    // Get the usable height
+    let usableHeight = screenBounds?.height ?? 0.0 - menuBarHeight - titleBarHeight
+
+    // Check if there is a bottom docker
+    if let bottomDocker = NSApplication.shared.windows.last(where: { $0.isVisible && $0.isFloatingPanel }) {
+        // Get the height of the bottom docker
+        let dockerHeight = bottomDocker.frame.height
+        // Subtract the docker height from the usable height
+        return NSMakeRect(screenBounds?.origin.x ?? 0.0, screenBounds?.origin.y ?? 0.0, screenBounds?.width ?? 0.0, usableHeight - dockerHeight)
+    } else {
+        // If there is no bottom docker, use the usable height as is
+        return NSMakeRect(screenBounds?.origin.x ?? 0.0, screenBounds?.origin.y ?? 0.0, screenBounds?.width ?? 0.0, usableHeight)
+    }
+}
+
+/**
+ Calculate the new position of a popup floating panel so that it can be within the viewport of screen
+ - Parameters:
+   - newPosition:
+   - popupRect:
+   - viewportRect:
+ - Returns:
+ */
+func calculatePopupPosition(newPosition: NSPoint, popupRect: NSRect, viewportRect: NSRect) -> NSPoint {
+    var adjustedPosition = newPosition
+
+    // Check if the popup is going off the right edge of the viewport
+    let rightEdge = newPosition.x + popupRect.width
+    if rightEdge > viewportRect.maxX {
+        adjustedPosition.x = viewportRect.maxX - popupRect.width
+    }
+
+    // Check if the popup is going off the left edge of the viewport
+    if newPosition.x < viewportRect.minX {
+        adjustedPosition.x = viewportRect.minX
+    }
+
+    // Check if the popup is going off the top edge of the viewport
+    let topEdge = newPosition.y + popupRect.height
+    if topEdge > viewportRect.maxY {
+        adjustedPosition.y = viewportRect.maxY - popupRect.height
+    }
+
+    // Check if the popup is going off the bottom edge of the viewport
+    if newPosition.y < viewportRect.minY {
+        adjustedPosition.y = viewportRect.minY
+    }
+
+    return adjustedPosition
+}
+
 
 extension Notification.Name {
     static let wakeUp = Notification.Name("WakeUp")
@@ -380,11 +446,13 @@ class ZTranslatorApp: App {
         if let popup = self.translatorPopup {
             let mouseLocation = NSEvent.mouseLocation
 
-            // move popup to new positon
-            let popupPosition = NSPoint(
+            // move popup to current mouse position
+            var popupPosition = NSPoint(
                 x: mouseLocation.x + 10,
                 y: mouseLocation.y - 20 - popup.frame.size.height
             )
+            popupPosition = calculatePopupPosition(newPosition: popupPosition, popupRect: popup.frame, viewportRect: getScreenViewportRect())
+
             popup.setFrameOrigin(popupPosition)
             popup.orderFront(nil)
             print("1 visible:", popup.isVisible)
