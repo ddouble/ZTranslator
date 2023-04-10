@@ -25,17 +25,19 @@ func getFontSize(for text: String, minimumSize minSize: CGFloat, maximumSize max
 
 struct TranslatorView: View {
     @State var originalText: String = ""
+    @State var originalTextFontSize: CGFloat = 36
     @State var text: String = ""
     @State var fontSize: CGFloat = 36
     var body: some View {
         VStack {
             ScrollView {
                 Text(originalText).font(
-                        .system(size: fontSize, design: .monospaced)
+                        .system(size: originalTextFontSize, design: .monospaced)
 //                    .custom("Verdana", size: 20)
                     )
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(CGFloat(0.6 * fontSize)).lineSpacing(CGFloat(0.2 * fontSize))
+                    .padding(CGFloat(22))
+                    .lineSpacing(CGFloat(0.2 * originalTextFontSize))
 //                    .multilineTextAlignment(.leading)
 
             }
@@ -45,7 +47,8 @@ struct TranslatorView: View {
                         .system(size: fontSize, design: .monospaced)
 //                    .custom("Verdana", size: 20)
                     ).frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(CGFloat(0.6 * fontSize)).lineSpacing(CGFloat(0.2 * fontSize))
+                    .padding(CGFloat(22))
+                    .lineSpacing(CGFloat(0.2 * fontSize))
             }
                 .frame(minWidth: 800)
         }
@@ -53,6 +56,7 @@ struct TranslatorView: View {
                 NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
                     if let newOriginalText = notification.object as? String {
                         self.fontSize = 36
+                        self.originalTextFontSize = getFontSize(for: newOriginalText, minimumSize: 22, maximumSize: 36, minLengthThreshold: 20)
                         self.originalText = newOriginalText
                         self.text = "..."
                     }
