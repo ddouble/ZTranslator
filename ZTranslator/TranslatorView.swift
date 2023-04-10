@@ -31,6 +31,10 @@ func getFontSize(for text: String, minimumSize minSize: CGFloat, maximumSize max
    - text:
  */
 func speak(synthesizer: AVSpeechSynthesizer, text: String) {
+    if synthesizer.isSpeaking {
+        synthesizer.stopSpeaking(at: .immediate)
+    }
+
     let voices = AVSpeechSynthesisVoice.speechVoices()
     for voice in voices {
         print("\(voice.language) - \(voice.name)")
