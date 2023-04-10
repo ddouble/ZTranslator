@@ -406,6 +406,25 @@ func calculatePopupPosition(newPosition: NSPoint, popupRect: NSRect, viewportRec
     return adjustedPosition
 }
 
+/**
+ Request accessibility permission and navigate user to setup it
+ */
+func requestAccessibilityPermission() {
+    if !AXIsProcessTrusted() {
+        let alert = NSAlert()
+        alert.messageText = "Please enable accessibility permissions"
+        alert.informativeText = "This app requires accessibility permissions to function properly. Please go to System Preferences > Security & Privacy > Privacy > Accessibility and add this app to the list of allowed apps."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: "Open System Preferences")
+        let result = alert.runModal()
+        if result == .alertSecondButtonReturn {
+            let prefURL = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!
+            NSWorkspace.shared.open(prefURL)
+        }
+    }
+}
+
 
 extension Notification.Name {
     static let wakeUp = Notification.Name("WakeUp")
@@ -471,6 +490,8 @@ class ZTranslatorApp: App {
     }
 
     required init() {
+        requestAccessibilityPermission()
+
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
 
