@@ -24,22 +24,38 @@ func getFontSize(for text: String, minimumSize minSize: CGFloat, maximumSize max
 }
 
 struct TranslatorView: View {
-    @State var text: String
+    @State var originalText: String = ""
+    @State var text: String = ""
     @State var fontSize: CGFloat = 36
     var body: some View {
-        HStack {
+        VStack {
+            ScrollView {
+                Text(originalText).font(
+                        .system(size: fontSize, design: .monospaced)
+//                    .custom("Verdana", size: 20)
+                    )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(CGFloat(0.6 * fontSize)).lineSpacing(CGFloat(0.2 * fontSize))
+//                    .multilineTextAlignment(.leading)
+
+            }
+                .frame(minWidth: 800)
             ScrollView {
                 Text(text).font(
-                    .system(size: fontSize, design: .monospaced)
+                        .system(size: fontSize, design: .monospaced)
 //                    .custom("Verdana", size: 20)
-                ).padding(CGFloat(0.6 * fontSize)).lineSpacing(CGFloat(0.2 * fontSize))
+                    ).frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(CGFloat(0.6 * fontSize)).lineSpacing(CGFloat(0.2 * fontSize))
             }
                 .frame(minWidth: 800)
         }
             .onAppear() {
                 NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
-                    self.fontSize = 36
-                    self.text = " ... "
+                    if let newOriginalText = notification.object as? String {
+                        self.fontSize = 36
+                        self.originalText = newOriginalText
+                        self.text = "..."
+                    }
 //                    NSApplication.shared.windows.first?.orderFrontRegardless()
                 }
 

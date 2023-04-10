@@ -440,7 +440,7 @@ class ZTranslatorApp: App {
         // Shows the translator popup and makes it topmost
         if self.translatorPopup == nil {
             self.translatorPopup = FloatingPanel(contentRect: NSRect(x: 1000, y: 100, width: 800, height: 300), backing: .buffered, defer: false)
-            self.translatorPopup?.contentView = NSHostingView(rootView: TranslatorView(text: " ... "))
+            self.translatorPopup?.contentView = NSHostingView(rootView: TranslatorView(text: "..."))
         }
 
         if let popup = self.translatorPopup {
@@ -477,7 +477,7 @@ class ZTranslatorApp: App {
             getSelectedText() { (text) in
                 self.showTranslatorPopup()
 
-                NotificationCenter.default.post(name: .wakeUp, object: nil)
+                NotificationCenter.default.post(name: .wakeUp, object: text ?? "")
 
                 getOpenAIResponse(text: text ?? "") { (response, error) in
                     if let error = error {
