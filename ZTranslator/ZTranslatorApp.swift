@@ -495,12 +495,13 @@ class ZTranslatorApp: App {
         let shortcut = MASShortcut(keyCode: kVK_ANSI_X, modifierFlags: [.control, .command])
         MASShortcutMonitor.shared().register(shortcut) {
 
-            getSelectedText() { (text) in
+            getSelectedText() { (selectedText) in
+                let text = selectedText?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 self.showTranslatorPopup()
 
-                NotificationCenter.default.post(name: .wakeUp, object: text ?? "")
+                NotificationCenter.default.post(name: .wakeUp, object: text)
 
-                getOpenAIResponse(text: text ?? "") { (response, error) in
+                getOpenAIResponse(text: text) { (response, error) in
                     if let error = error {
                         print("Error: \(error)")
                         NotificationCenter.default.post(name: .selectedTextChanged, object: error)
