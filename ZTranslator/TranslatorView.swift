@@ -35,10 +35,10 @@ func speak(synthesizer: AVSpeechSynthesizer, text: String) {
         synthesizer.stopSpeaking(at: .immediate)
     }
 
-    let voices = AVSpeechSynthesisVoice.speechVoices()
-    for voice in voices {
-        print("\(voice.language) - \(voice.name)")
-    }
+//    let voices = AVSpeechSynthesisVoice.speechVoices()
+//    for voice in voices {
+//        print("\(voice.language) - \(voice.name)")
+//    }
 
     let utterance = AVSpeechUtterance(string: text)
     let voice = AVSpeechSynthesisVoice(identifier: "com.apple.speech.synthesis.voice.Kate")
