@@ -8,6 +8,7 @@
 import SwiftUI
 import Cocoa
 import MASShortcut
+import AVFoundation
 
 func getFontSize(for text: String, minimumSize minSize: CGFloat, maximumSize maxSize: CGFloat, minLengthThreshold: Int = 10, maxLengthThreshold: Int = 200) -> CGFloat {
     let length = text.count
@@ -23,11 +24,37 @@ func getFontSize(for text: String, minimumSize minSize: CGFloat, maximumSize max
     }
 }
 
+/**
+ Read text by text-to-speech
+ - Parameters:
+   - synthesizer:
+   - text:
+ */
+func speak(synthesizer: AVSpeechSynthesizer, text: String) {
+    let voices = AVSpeechSynthesisVoice.speechVoices()
+    for voice in voices {
+        print("\(voice.language) - \(voice.name)")
+    }
+
+    let utterance = AVSpeechUtterance(string: text)
+    let voice = AVSpeechSynthesisVoice(identifier: "com.apple.speech.synthesis.voice.Kate")
+    utterance.rate = 0.5
+    utterance.pitchMultiplier = 0.8
+    utterance.postUtteranceDelay = 0.2
+    utterance.volume = 0.8
+    utterance.voice = voice
+    synthesizer.speak(utterance)
+
+}
+
 struct TranslatorView: View {
     @State var originalText: String = ""
     @State var originalTextFontSize: CGFloat = 36
     @State var text: String = ""
     @State var fontSize: CGFloat = 36
+
+    private let synthesizer = AVSpeechSynthesizer()
+
     var body: some View {
         VStack {
             ScrollView {
@@ -59,6 +86,8 @@ struct TranslatorView: View {
                         self.originalTextFontSize = getFontSize(for: newOriginalText, minimumSize: 22, maximumSize: 36, minLengthThreshold: 20)
                         self.originalText = newOriginalText
                         self.text = "..."
+
+                        speak(synthesizer: synthesizer, text: originalText)
                     }
 //                    NSApplication.shared.windows.first?.orderFrontRegardless()
                 }
