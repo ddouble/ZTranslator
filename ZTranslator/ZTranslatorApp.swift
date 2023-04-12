@@ -258,6 +258,7 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
     request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 
     let messages: [[String: Any]] = [
+//        ["role": "system", "content": "translate the text to " + toLang + ", return as json format {\"original-lang\": \"\", text: \"\"}, lang is the language of original text, if there's error please output to text field"],
         ["role": "system", "content": "translate to " + toLang],
         ["role": "user", "content": text],
 //                ["role": "assistant", "content": "Hi there, how can I help you today?"],
