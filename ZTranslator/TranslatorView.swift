@@ -59,6 +59,7 @@ func wordCount(_ string: String) -> Int {
 
 struct TranslatorView: View {
     @State var originalText: String = ""
+    @State var originalTextLang: String = ""
     @State var originalTextFontSize: CGFloat = 36
     @State var text: String = ""
     @State var fontSize: CGFloat = 36
@@ -73,7 +74,7 @@ struct TranslatorView: View {
                 }) {
                     Image(systemName: "icon1")
                 }
-                Text("English")
+                Text(originalTextLang)
             }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 22).padding(.trailing, 22)
@@ -117,6 +118,7 @@ struct TranslatorView: View {
                         self.fontSize = 36
                         self.originalTextFontSize = getFontSize(for: newOriginalText, minimumSize: 22, maximumSize: 36, minLengthThreshold: 20)
                         self.originalText = newOriginalText
+                        self.originalTextLang = ""
                         self.text = "..."
 
                         if wordCount(originalText) < 5 {
@@ -127,9 +129,17 @@ struct TranslatorView: View {
                 }
 
                 NotificationCenter.default.addObserver(forName: .selectedTextChanged, object: nil, queue: .main) { notification in
-                    if let newText = notification.object as? String {
-                        self.fontSize = getFontSize(for: newText, minimumSize: 26, maximumSize: 36)
-                        self.text = newText
+                    if let response = notification.object as? (originalLang: String, text: String, error: String?) {
+//                        if response.error != nil {
+                            self.originalTextLang = response.originalLang
+                            self.fontSize = getFontSize(for: response.text, minimumSize: 26, maximumSize: 36)
+                            self.text = response.text// + (response.error ?? "")
+//                            print(response.text, self.text)
+//                        }
+//                        else {
+//                            self.originalTextLang = ""
+//                            self.text = response.error ?? ""
+//                        }
                     }
 //                    NSApplication.shared.windows.first?.orderFrontRegardless()
                 }

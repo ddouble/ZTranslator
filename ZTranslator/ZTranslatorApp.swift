@@ -238,12 +238,12 @@ func bringWindowToFront(windowTitle: String) {
 }
 
 /**
- Get tranlsation result from chatgpt
+ Get translation result from chatgpt
  - Parameters:
    - text:
    - completion:
  */
-func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> Void) {
+func getOpenAIResponse(text: String, completion: @escaping ((originalLang: String, text: String, error: String?)) -> Void) {
     @AppStorage("ZTranslator.openai-api-key")
     var apiKey: String = "YOUR-OPENAI-API-KEY"
 
@@ -257,10 +257,19 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
 
+    var jsonText = ""
+    do {
+        let jsonData = try JSONEncoder().encode(text)
+        jsonText = String(data: jsonData, encoding: .utf8)!
+//        print(jsonText)
+    } catch {
+        completion(("", "", "Error: \(error.localizedDescription)"))
+    }
+
     let messages: [[String: Any]] = [
-//        ["role": "system", "content": "translate the text to " + toLang + ", return as json format {\"original-lang\": \"\", text: \"\"}, lang is the language of original text, if there's error please output to text field"],
-        ["role": "system", "content": "translate to " + toLang],
-        ["role": "user", "content": text],
+        ["role": "system", "content": "translate the 'content' value to \(toLang), and fill the 'original-lang' value as IETF language tags, return as JSON format without explanation"],
+//        ["role": "system", "content": "translate to " + toLang],
+        ["role": "user", "content": "{\"original-lang\":\"\", \"content\": \"\(jsonText)\"}"],
 //                ["role": "assistant", "content": "Hi there, how can I help you today?"],
 //                ["role": "user", "content": "I need help with a problem"],
 //                ["role": "assistant", "content": "Sure, what kind of problem are you experiencing?"],
@@ -269,37 +278,37 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
     let parameters: [String: Any] = [
         "model": "gpt-3.5-turbo",
         "messages": messages,
-        "temperature": 0.7,
+        "temperature": 0.3,
         "max_tokens": 1000
     ]
     request.httpBody = try! JSONSerialization.data(withJSONObject: parameters)
 
 
-//    func parseJSON(jsonString: String) -> (originalLang: String, text: String, error: String?) {
-//        guard let jsonData = jsonString.data(using: .utf8) else {
-//            return ("", "", "Invalid JSON data")
-//        }
-//
-//        do {
-//            if let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-//                let originalLang = jsonObject["original-lang"] as? String ?? ""
-//                let text = jsonObject["text"] as? String ?? ""
-//                return (originalLang, text, nil)
-//            } else {
-//                return ("", "", "JSON data is not a dictionary")
-//            }
-//        } catch let error {
-//            return ("", "", error.localizedDescription)
-//        }
-//    }
+    func parseAssistantReply(jsonString: String) -> (originalLang: String, text: String, error: String?) {
+        guard let jsonData = jsonString.data(using: .utf8) else {
+            return ("", jsonString, "Invalid JSON data")
+        }
+
+        do {
+            if let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                let originalLang = jsonObject["original-lang"] as? String ?? ""
+                let text = jsonObject["content"] as? String ?? ""
+                return (originalLang, text, nil)
+            } else {
+                return ("", jsonString, "JSON data is not a dictionary")
+            }
+        } catch let error {
+            return ("", jsonString, nil)
+        }
+    }
 
     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
         if let error = error {
-            completion(nil, error)
+            completion(("", "", error.localizedDescription))
             return
         }
         guard let data = data else {
-            completion(nil, nil)
+            completion(("", "", "Unknown error"))
             return
         }
         do {
@@ -308,15 +317,15 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
                 let message = error["message"] as? String ?? "Unknown error"
                 let type = error["type"] as? String ?? ""
                 let error = NSError(domain: "OpenAIError", code: 0, userInfo: [NSLocalizedDescriptionKey: "\(type): \(message)"])
-                completion(nil, error)
+                completion(("", "", error.localizedDescription))
             } else {
                 let choices = json?["choices"] as? [[String: Any]]
                 let message = choices?.first?["message"] as? [String: Any]
                 let text = message?["content"] as? String
-                completion(text, nil)
+                completion(parseAssistantReply(jsonString: text ?? ""))
             }
         } catch {
-            completion(nil, error)
+            completion(("", "", error.localizedDescription))
         }
     }
     task.resume()
@@ -521,17 +530,19 @@ class ZTranslatorApp: App {
 
                 NotificationCenter.default.post(name: .wakeUp, object: text)
 
-                getOpenAIResponse(text: text) { (response, error) in
-                    if let error = error {
-                        print("Error: \(error)")
-                        NotificationCenter.default.post(name: .selectedTextChanged, object: error)
-                    } else if let response = response {
-//                        print("Response: \(response)")
-                        NotificationCenter.default.post(name: .selectedTextChanged, object: response)
-                    } else {
-//                        print("No response")
-                        NotificationCenter.default.post(name: .selectedTextChanged, object: "No response")
-                    }
+                getOpenAIResponse(text: text) { (response: (originalLang: String, text: String, error: String?)) in
+                    NotificationCenter.default.post(name: .selectedTextChanged, object: response)
+
+//                    if let error = error {
+//                        print("Error: \(error)")
+//                        NotificationCenter.default.post(name: .selectedTextChanged, object: error)
+//                    } else if let response = response {
+////                        print("Response: \(response)")
+//                        NotificationCenter.default.post(name: .selectedTextChanged, object: response)
+//                    } else {
+////                        print("No response")
+//                        NotificationCenter.default.post(name: .selectedTextChanged, object: "No response")
+//                    }
                 }
             }
         }
