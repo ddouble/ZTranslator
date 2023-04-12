@@ -51,6 +51,12 @@ func speak(synthesizer: AVSpeechSynthesizer, text: String) {
 
 }
 
+
+func wordCount(_ string: String) -> Int {
+    let words = string.components(separatedBy: .whitespacesAndNewlines)
+    return words.count
+}
+
 struct TranslatorView: View {
     @State var originalText: String = ""
     @State var originalTextFontSize: CGFloat = 36
@@ -91,7 +97,9 @@ struct TranslatorView: View {
                         self.originalText = newOriginalText
                         self.text = "..."
 
-                        speak(synthesizer: synthesizer, text: originalText)
+                        if wordCount(originalText) < 5 {
+                            speak(synthesizer: synthesizer, text: originalText)
+                        }
                     }
 //                    NSApplication.shared.windows.first?.orderFrontRegardless()
                 }
