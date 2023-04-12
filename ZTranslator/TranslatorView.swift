@@ -12,14 +12,14 @@ import AVFoundation
 
 func getFontSize(for text: String, minimumSize minSize: CGFloat, maximumSize maxSize: CGFloat, minLengthThreshold: Int = 10, maxLengthThreshold: Int = 200) -> CGFloat {
     let length = text.count
-    print(length, minSize, maxSize, minLengthThreshold, maxLengthThreshold)
+//    print(length, minSize, maxSize, minLengthThreshold, maxLengthThreshold)
     if length < minLengthThreshold {
         return maxSize
     } else if length > maxLengthThreshold {
         return minSize
     } else {
         let fontRatio = (CGFloat(length) - CGFloat(minLengthThreshold)) / (CGFloat(maxLengthThreshold) - CGFloat(minLengthThreshold))
-        print(fontRatio, Int(maxSize - fontRatio * (maxSize - minSize)))
+//        print(fontRatio, Int(maxSize - fontRatio * (maxSize - minSize)))
         return CGFloat(Int(maxSize - fontRatio * (maxSize - minSize)))
     }
 }

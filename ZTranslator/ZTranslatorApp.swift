@@ -77,7 +77,7 @@ func getSelectedText2() -> String? {
     }
 
     let s = selectedText as! String
-    print(s)
+//    print(s)
     return s
 
 }
@@ -474,7 +474,7 @@ class ZTranslatorApp: App {
 
             popup.setFrameOrigin(popupPosition)
             popup.orderFront(nil)
-            print("1 visible:", popup.isVisible)
+//            print("1 visible:", popup.isVisible)
 
 
             var area = popup.frame
@@ -483,7 +483,7 @@ class ZTranslatorApp: App {
                 if (!isPointInArea) {
 //                    print("hide")
                     popup.orderOut(nil)
-                    print("2 visible:", popup.isVisible)
+//                    print("2 visible:", popup.isVisible)
                 }
             }
         }
