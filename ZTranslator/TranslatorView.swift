@@ -67,24 +67,46 @@ struct TranslatorView: View {
 
     var body: some View {
         VStack {
+            HStack {
+                Button(action: {
+                    speak(synthesizer: synthesizer, text: originalText)
+                }) {
+                    Image(systemName: "icon1")
+                }
+                Text("English")
+            }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 22).padding(.trailing, 22)
+                .padding(.top, 22).padding(.bottom, 0)
             ScrollView {
                 Text(originalText).font(
                         .system(size: originalTextFontSize, design: .monospaced)
 //                    .custom("Verdana", size: 20)
                     )
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(CGFloat(22))
+                    .padding(.leading, 22).padding(.trailing, 22)
                     .lineSpacing(CGFloat(0.2 * originalTextFontSize))
 //                    .multilineTextAlignment(.leading)
 
             }
                 .frame(minWidth: 800)
+//            HStack {
+//                Button(action: {
+//                    // Add action for icon button 2
+//                }) {
+//                    Image(systemName: "icon2")
+//                }
+//                Text("")
+//            }
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                .padding(.leading, 22).padding(.trailing, 22)
+//                .padding(.top, 22).padding(.bottom, 8)
             ScrollView {
                 Text(text).font(
                         .system(size: fontSize, design: .monospaced)
 //                    .custom("Verdana", size: 20)
                     ).frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(CGFloat(22))
+                    .padding(.leading, 22).padding(.trailing, 22)
                     .lineSpacing(CGFloat(0.2 * fontSize))
             }
                 .frame(minWidth: 800)
