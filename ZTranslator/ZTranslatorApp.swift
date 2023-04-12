@@ -274,6 +274,25 @@ func getOpenAIResponse(text: String, completion: @escaping (String?, Error?) -> 
     ]
     request.httpBody = try! JSONSerialization.data(withJSONObject: parameters)
 
+
+//    func parseJSON(jsonString: String) -> (originalLang: String, text: String, error: String?) {
+//        guard let jsonData = jsonString.data(using: .utf8) else {
+//            return ("", "", "Invalid JSON data")
+//        }
+//
+//        do {
+//            if let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+//                let originalLang = jsonObject["original-lang"] as? String ?? ""
+//                let text = jsonObject["text"] as? String ?? ""
+//                return (originalLang, text, nil)
+//            } else {
+//                return ("", "", "JSON data is not a dictionary")
+//            }
+//        } catch let error {
+//            return ("", "", error.localizedDescription)
+//        }
+//    }
+
     let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
         if let error = error {
             completion(nil, error)
