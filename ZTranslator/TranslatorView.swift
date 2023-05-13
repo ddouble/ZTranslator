@@ -72,7 +72,7 @@ struct TranslatorView: View {
                 Button(action: {
                     speak(synthesizer: synthesizer, text: originalText)
                 }) {
-                    Image(systemName: "icon1")
+//                    Image(systemName: "icon1")
                 }
                 Text(originalTextLang)
             }

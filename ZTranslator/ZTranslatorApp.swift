@@ -475,7 +475,7 @@ class ZTranslatorApp: App {
 
                 let mouseIsOut = !area.contains(point)
                 callback(mouseIsOut)
-                if !mouseIsOut {
+                if mouseIsOut {
                     timer.invalidate()
 //            print("Point is out of area, stopping timer")
                 } else {
