@@ -15,7 +15,9 @@
 		5605C64029DD6B4800454941 /* ZTranslatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5605C63F29DD6B4800454941 /* ZTranslatorUITests.swift */; };
 		5605C64229DD6B4800454941 /* ZTranslatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5605C64129DD6B4800454941 /* ZTranslatorUITestsLaunchTests.swift */; };
 		56F858AF29DEDBAF00AA46E3 /* MASShortcut in Frameworks */ = {isa = PBXBuildFile; productRef = 56F858AE29DEDBAF00AA46E3 /* MASShortcut */; };
+		56FB548F29FBDEB500399C17 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 56FB548E29FBDEB500399C17 /* KeyboardShortcuts */; };
 		5AE6A27628AE3BAC3169C1CA /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE6A62A4047CD1E4F6A96D8 /* FloatingPanel.swift */; };
+		5AE6A715DB9FD52CB08021AA /* ZTranslatorSettings.swift.bk in Resources */ = {isa = PBXBuildFile; fileRef = 5AE6A74D1899115C144329F4 /* ZTranslatorSettings.swift.bk */; };
 		5AE6A8DE9E1C7A0804FFF729 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5AE6ACEB7460F49F317FE7DA /* .gitignore */; };
 		5AE6A98DDD33605E6C081909 /* ZTranslatorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE6A7AF14BCAF2FE606B774 /* ZTranslatorSettings.swift */; };
 /* End PBXBuildFile section */
@@ -50,7 +52,9 @@
 		5605C64129DD6B4800454941 /* ZTranslatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZTranslatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		5605C64E29DD849200454941 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5AE6A62A4047CD1E4F6A96D8 /* FloatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
+		5AE6A74D1899115C144329F4 /* ZTranslatorSettings.swift.bk */ = {isa = PBXFileReference; lastKnownFileType = file.bk; path = ZTranslatorSettings.swift.bk; sourceTree = "<group>"; };
 		5AE6A7AF14BCAF2FE606B774 /* ZTranslatorSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZTranslatorSettings.swift; sourceTree = "<group>"; };
+		5AE6AA231F73CAB6F572DB7A /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		5AE6ACEB7460F49F317FE7DA /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +64,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				56F858AF29DEDBAF00AA46E3 /* MASShortcut in Frameworks */,
+				56FB548F29FBDEB500399C17 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +93,7 @@
 				5605C63E29DD6B4800454941 /* ZTranslatorUITests */,
 				5605C62129DD6B4500454941 /* Products */,
 				5AE6ACEB7460F49F317FE7DA /* .gitignore */,
+				5AE6AA231F73CAB6F572DB7A /* readme.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -111,6 +117,7 @@
 				5605C62929DD6B4700454941 /* Preview Content */,
 				5AE6A7AF14BCAF2FE606B774 /* ZTranslatorSettings.swift */,
 				5AE6A62A4047CD1E4F6A96D8 /* FloatingPanel.swift */,
+				5AE6A74D1899115C144329F4 /* ZTranslatorSettings.swift.bk */,
 			);
 			path = ZTranslator;
 			sourceTree = "<group>";
@@ -158,6 +165,7 @@
 			name = ZTranslator;
 			packageProductDependencies = (
 				56F858AE29DEDBAF00AA46E3 /* MASShortcut */,
+				56FB548E29FBDEB500399C17 /* KeyboardShortcuts */,
 			);
 			productName = ZTranslator;
 			productType = "com.apple.product-type.application";
@@ -232,6 +240,7 @@
 			mainGroup = 5605C61729DD6B4500454941;
 			packageReferences = (
 				56F858AD29DEDBAF00AA46E3 /* XCRemoteSwiftPackageReference "MASShortcut" */,
+				56FB548D29FBDEB500399C17 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			productRefGroup = 5605C62129DD6B4500454941 /* Products */;
 			projectDirPath = "";
@@ -252,6 +261,7 @@
 				5605C62B29DD6B4700454941 /* Preview Assets.xcassets in Resources */,
 				5605C62829DD6B4700454941 /* Assets.xcassets in Resources */,
 				5AE6A8DE9E1C7A0804FFF729 /* .gitignore in Resources */,
+				5AE6A715DB9FD52CB08021AA /* ZTranslatorSettings.swift.bk in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,7 +462,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.cat.ZTranslator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -484,7 +494,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.cat.ZTranslator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -611,6 +621,14 @@
 				kind = branch;
 			};
 		};
+		56FB548D29FBDEB500399C17 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -618,6 +636,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 56F858AD29DEDBAF00AA46E3 /* XCRemoteSwiftPackageReference "MASShortcut" */;
 			productName = MASShortcut;
+		};
+		56FB548E29FBDEB500399C17 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 56FB548D29FBDEB500399C17 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

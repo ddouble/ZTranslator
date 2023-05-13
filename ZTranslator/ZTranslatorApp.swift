@@ -102,7 +102,7 @@ func getSelectedTextRect() {
             if (selectedBoundsError == .success) {
                 AXValueGetValue(selectBounds as! AXValue, .cgRect, &selectRect)
                 //do whatever you want with your selectRect
-                print(selectRect)
+//                print(selectRect)
             }
         }
     }
@@ -331,28 +331,6 @@ func getOpenAIResponse(text: String, completion: @escaping ((originalLang: Strin
     task.resume()
 }
 
-/**
- report to caller if mouse point is in a specific area
-
- - Parameters:
-   - area:
-   - callback:
- - Returns:
- */
-func monitorMousePosition(area: NSRect, callback: @escaping (Bool) -> Void) -> Timer {
-    let timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
-        let point = NSEvent.mouseLocation
-        let isPointInArea = area.contains(point)
-        callback(isPointInArea)
-        if !isPointInArea {
-            timer.invalidate()
-//            print("Point is out of area, stopping timer")
-        } else {
-//            print("Point is within area")
-        }
-    }
-    return timer
-}
 
 /**
  resize a rect from its center by x, y amount
@@ -480,6 +458,35 @@ class ZTranslatorApp: App {
         #endif
     }
 
+    /**
+     report to caller if mouse point is in a specific area
+
+     - Parameters:
+       - callback:
+     - Returns:
+     */
+    func monitorMousePositionInTranslatorView(callback: @escaping (Bool) -> Void) -> Timer {
+        let timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
+            let point = NSEvent.mouseLocation
+
+            if let popup = self.translatorPopup {
+                var area = popup.frame
+                resizeRectFromCenter(&area, xAmount: 40, yAmount: 80)
+
+                let mouseIsOut = !area.contains(point)
+                callback(mouseIsOut)
+                if !mouseIsOut {
+                    timer.invalidate()
+//            print("Point is out of area, stopping timer")
+                } else {
+//            print("Point is within area")
+                }
+
+            }
+        }
+        return timer
+    }
+
     func showTranslatorPopup() {
         if self.translatorPopupTimer != nil && self.translatorPopupTimer?.isValid == true {
             self.translatorPopupTimer?.invalidate()
@@ -505,11 +512,10 @@ class ZTranslatorApp: App {
             popup.orderFront(nil)
 //            print("1 visible:", popup.isVisible)
 
-
             var area = popup.frame
             resizeRectFromCenter(&area, xAmount: 40, yAmount: 80)
-            self.translatorPopupTimer = monitorMousePosition(area: area) { (isPointInArea) in
-                if (!isPointInArea) {
+            self.translatorPopupTimer = self.monitorMousePositionInTranslatorView() { (mouseIsOut) in
+                if (mouseIsOut) {
 //                    print("hide")
                     popup.orderOut(nil)
 //                    print("2 visible:", popup.isVisible)

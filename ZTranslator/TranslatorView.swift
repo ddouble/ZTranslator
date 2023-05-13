@@ -112,6 +112,15 @@ struct TranslatorView: View {
             }
                 .frame(minWidth: 800)
         }
+            .gesture(DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    // Handle drag start event
+                }
+                .onEnded { value in
+                    // Handle drag end event
+//                    print(value)
+                }
+            )
             .onAppear() {
                 NotificationCenter.default.addObserver(forName: .wakeUp, object: nil, queue: .main) { notification in
                     if let newOriginalText = notification.object as? String {
